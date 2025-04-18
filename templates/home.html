@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            font-family: 'Roboto', sans-serif;
+        }
+        .navbar-brand {
+            font-family: 'Roboto Slab', serif;
+        }
+        .action-card {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+        }
+        .action-card h5 {
+            font-weight: bold;
+        }
+        .footer {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow">
+        <div class="container-fluid position-relative">
+            <!-- Centered Welcome Message -->
+            <div class="bg-dark px-3 py-2">
+                <div class="navbar-brand m-0 h3 text-light">
+                    📚 PathShala
+                </div>
+            </div>
+
+            <!-- Search form on the right -->
+            <form class="d-flex ms-auto" role="search">
+                <input class="form-control me-2 border-0 shadow-sm" type="search" placeholder="Search books..." aria-label="Search">
+                <button class="btn btn-success shadow-sm" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Welcome to PathShala Library!</h1>
+        <p class="text-center text-muted">Your one-stop solution for managing books, borrowers, and library operations.</p>
+
+        <!-- Action Cards -->
+        <div class="row mt-5">
+            <div class="col-md-3">
+                <div class="card action-card text-center p-3 h-100 d-flex flex-column">
+                    <h5>Add a New User</h5>
+                    <p class="text-muted flex-grow-1">Register new borrowers in the system.</p>
+                    <a href="/borrowers" class="btn btn-primary mt-auto">Add User</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card action-card text-center p-3 h-100 d-flex flex-column">
+                    <h5>Borrow a Book</h5>
+                    <p class="text-muted flex-grow-1">Issue books to registered borrowers.</p>
+                    <a href="/borrow_book" class="btn btn-success mt-auto">Borrow</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card action-card text-center p-3 h-100 d-flex flex-column">
+                    <h5>View Borrowed Books</h5>
+                    <p class="text-muted flex-grow-1">Check the list of currently borrowed books.</p>
+                    <a href="/borrowed_books" class="btn btn-dark mt-auto">View Borrowed</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card action-card text-center p-3 h-100 d-flex flex-column">
+                    <h5>Available Books</h5>
+                    <p class="text-muted flex-grow-1">Browse all books currently available in the library.</p>
+                    <a href="/available_books" class="btn btn-info mt-auto">View Available</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2025 PathShala Library. All rights reserved.</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
