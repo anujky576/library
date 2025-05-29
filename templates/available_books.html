@@ -43,26 +43,28 @@
         <div class="modern-container w-75 p-4">
             <h1 class="text-center mb-4">Available Books</h1>
             {% if books %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Serial Number</th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Publication</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for book in books %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>{{ book[0] }}</td> <!-- Serial Number -->
-                                <td>{{ book[1] }}</td> <!-- Title -->
-                                <td>{{ book[2] }}</td> <!-- Author -->
-                                <td>{{ book[3] }}</td> <!-- Publication -->
+                                <th>Serial Number</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Publication</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for book in books %}
+                                <tr>
+                                    <td>{{ book[0] }}</td> <!-- Serial Number -->
+                                    <td>{{ book[1] }}</td> <!-- Title -->
+                                    <td>{{ book[2] }}</td> <!-- Author -->
+                                    <td>{{ book[3] }}</td> <!-- Publication -->
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% else %}
                 <p class="text-center text-muted">No books available.</p>
             {% endif %}

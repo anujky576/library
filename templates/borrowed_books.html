@@ -16,56 +16,58 @@
             </form>
         </div>
         {% if borrowed_books %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Serial Number</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Borrower</th>
-                    <th>Issue Date</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for book in borrowed_books %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>{{ book[0] }}</td> <!-- Serial Number -->
-                        <td>{{ book[1] }}</td> <!-- Title -->
-                        <td>{{ book[2] }}</td> <!-- Author -->
-                        <td>{{ book[4] }}</td> <!-- Borrower Name -->
-                        <td>{{ book[5] if book[5] else "N/A" }}</td> <!-- Issue Date -->
-                        <td>{{ book[6] if book[6] else "N/A" }}</td> <!-- Due Date -->
-                        <td>
-                            {% if book[6] and book[6] >= current_date %}
-                                <span class="text-success">On Time</span>
-                            {% elif book[6] and book[6] < current_date %}
-                                <span class="text-danger">Overdue</span>
-                            {% else %}
-                                <span class="text-muted">Unknown</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if book[6] and book[6] >= current_date %}
-                                <form method="POST" action="/return_book">
-                                    <input type="hidden" name="serial_number" value="{{ book[0] }}">
-                                    <button type="submit" class="btn btn-success btn-sm">Return</button>
-                                </form>
-                            {% elif book[6] and book[6] < current_date %}
-                                <form method="POST" action="/return_with_penalty">
-                                    <input type="hidden" name="serial_number" value="{{ book[0] }}">
-                                    <button type="submit" class="btn btn-danger btn-sm">Return with Penalty</button>
-                                </form>
-                            {% else %}
-                                <span class="text-muted">No Action</span>
-                            {% endif %}
-                        </td>
+                        <th>Serial Number</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Borrower</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for book in borrowed_books %}
+                        <tr>
+                            <td>{{ book[0] }}</td> <!-- Serial Number -->
+                            <td>{{ book[1] }}</td> <!-- Title -->
+                            <td>{{ book[2] }}</td> <!-- Author -->
+                            <td>{{ book[4] }}</td> <!-- Borrower Name -->
+                            <td>{{ book[5] if book[5] else "N/A" }}</td> <!-- Issue Date -->
+                            <td>{{ book[6] if book[6] else "N/A" }}</td> <!-- Due Date -->
+                            <td>
+                                {% if book[6] and book[6] >= current_date %}
+                                    <span class="text-success">On Time</span>
+                            {% elif book[6] and book[6] < current_date %}
+                                    <span class="text-danger">Overdue</span>
+                                {% else %}
+                                    <span class="text-muted">Unknown</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if book[6] and book[6] >= current_date %}
+                                    <form method="POST" action="/return_book">
+                                        <input type="hidden" name="serial_number" value="{{ book[0] }}">
+                                        <button type="submit" class="btn btn-success btn-sm">Return</button>
+                                    </form>
+                                {% elif book[6] and book[6] < current_date %}
+                                    <form method="POST" action="/return_with_penalty">
+                                        <input type="hidden" name="serial_number" value="{{ book[0] }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">Return with Penalty</button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted">No Action</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
         <div class="alert alert-info text-center" role="alert">
             No books borrowed.

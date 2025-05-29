@@ -242,6 +242,20 @@ def clean_borrowed_books():
     except Exception as e:
         return f"An error occurred: {e}", 500
 
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('q', '').strip()
+    books = []
+    if query:
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            SELECT serial_number, title, author, publication
+            FROM books
+            WHERE title LIKE %s OR author LIKE %s OR serial_number LIKE %s
+        """, (f"%{query}%", f"%{query}%", f"%{query}%"))
+        books = cur.fetchall()
+        cur.close()
+    return render_template('available_books.html', books=books, search_query=query)
 
 
 if __name__ == '__main__':
