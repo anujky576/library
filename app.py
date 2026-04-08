@@ -183,7 +183,14 @@ def remove_borrower():
     try:
         cur = mysql.connection.cursor()
 
-        # Remove the borrower from the database
+        # First, return all borrowed books for this borrower
+        cur.execute("""
+            UPDATE books
+            SET borrower_id = NULL, issue_date = NULL, due_date = NULL
+            WHERE borrower_id = %s
+        """, (borrower_id,))
+
+        # Now remove the borrower from the database
         cur.execute("DELETE FROM borrowers WHERE id = %s", (borrower_id,))
 
         # Commit the changes
