@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - PathShala</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #e8f5f0 0%, #c3dfd6 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+        .card-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #1a4d2e 0%, #0d3d22 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-card.green {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        .stat-card.orange {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        .stat-card.red {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        .filter-section {
+            background: #e8f5f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .filter-section h4 {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            padding: 10px 15px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #1a4d2e;
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.1);
+        }
+        .btn-filter {
+            background: #1a4d2e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-filter:hover {
+            background: #0d3d22;
+            transform: translateY(-2px);
+        }
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            margin-bottom: 0;
+        }
+        table thead {
+            background: linear-gradient(135deg, #1a4d2e 0%, #0d3d22 100%);
+            color: white;
+        }
+        table thead th {
+            border: none;
+            font-weight: 600;
+            padding: 15px;
+            text-align: left;
+        }
+        table tbody td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+        }
+        .transaction-id {
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #1a4d2e;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-returned {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .payment-method-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        .btn-view {
+            background: #1a4d2e;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-view:hover {
+            background: #0d3d22;
+        }
+        .no-records {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .pagination-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .btn-page {
+            background: #1a4d2e;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-page:hover {
+            background: #0d3d22;
+        }
+        .btn-page:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .page-info {
+            font-weight: 600;
+            color: #1a4d2e;
+            min-width: 150px;
+            text-align: center;
+        }
+        .btn-back {
+            background: #f0f0f0;
+            border: none;
+            color: #333;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        .btn-back:hover {
+            background: #e0e0e0;
+        }
+        @media (max-width: 768px) {
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container py-5">
+        <div class="page-header">
+            <h1>📊 Transaction History</h1>
+            <p class="text-muted">Complete record of all fine payments and transactions</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div>💼</div>
+                <div class="stat-value">{{ stats.total_transactions }}</div>
+                <div class="stat-label">Total Transactions</div>
+            </div>
+            <div class="stat-card green">
+                <div>✅</div>
+                <div class="stat-value">₹{{ stats.total_collected }}</div>
+                <div class="stat-label">Total Collected</div>
+            </div>
+            <div class="stat-card orange">
+                <div>📚</div>
+                <div class="stat-value">{{ stats.total_books_returned }}</div>
+                <div class="stat-label">Books Returned</div>
+            </div>
+            <div class="stat-card red">
+                <div>⚠️</div>
+                <div class="stat-value">{{ stats.avg_fine }}</div>
+                <div class="stat-label">Avg Fine (₹)</div>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <h4>🔍 Filter Transactions</h4>
+                <form method="GET" class="filter-controls">
+                    <input type="text" name="search" class="form-control" placeholder="Search by Transaction ID or Book Title" value="{{ search_query or '' }}">
+                    
+                    <select name="payment_method" class="form-select">
+                        <option value="">-- All Payment Methods --</option>
+                        <option value="UPI" {% if payment_method == 'UPI' %}selected{% endif %}>UPI</option>
+                        <option value="DEBIT" {% if payment_method == 'DEBIT' %}selected{% endif %}>Debit Card</option>
+                        <option value="CREDIT" {% if payment_method == 'CREDIT' %}selected{% endif %}>Credit Card</option>
+                        <option value="NETBANKING" {% if payment_method == 'NETBANKING' %}selected{% endif %}>Net Banking</option>
+                        <option value="QR" {% if payment_method == 'QR' %}selected{% endif %}>QR Code</option>
+                        <option value="WALLET" {% if payment_method == 'WALLET' %}selected{% endif %}>Wallet</option>
+                        <option value="CASH" {% if payment_method == 'CASH' %}selected{% endif %}>Cash</option>
+                    </select>
+                    
+                    <select name="date_range" class="form-select">
+                        <option value="">-- All Time --</option>
+                        <option value="today" {% if date_range == 'today' %}selected{% endif %}>Today</option>
+                        <option value="week" {% if date_range == 'week' %}selected{% endif %}>Last 7 Days</option>
+                        <option value="month" {% if date_range == 'month' %}selected{% endif %}>Last 30 Days</option>
+                        <option value="year" {% if date_range == 'year' %}selected{% endif %}>Last Year</option>
+                    </select>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn-filter">🔍 Search</button>
+                        <a href="/transaction_history" class="btn-reset">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Transactions Table -->
+            {% if transactions %}
+            <div class="table-wrapper">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>🔢 Transaction ID</th>
+                            <th>📖 Book Title</th>
+                            <th>👤 Borrower</th>
+                            <th>💰 Fine (₹)</th>
+                            <th>💳 Payment Method</th>
+                            <th>📅 Date</th>
+                            <th>⏱️ Time</th>
+                            <th>✅ Status</th>
+                            <th>📋 Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for txn in transactions %}
+                        <tr>
+                            <td><span class="transaction-id">{{ txn.transaction_id }}</span></td>
+                            <td>{{ txn.title }}</td>
+                            <td>{{ txn.borrower_name }}</td>
+                            <td><strong style="color: #e74c3c;">₹{{ txn.amount }}</strong></td>
+                            <td><span class="payment-method-badge">{{ txn.payment_method }}</span></td>
+                            <td>{{ txn.payment_date }}</td>
+                            <td><code>{{ txn.payment_time }}</code></td>
+                            <td><span class="status-badge status-paid">✓ PAID</span></td>
+                            <td>
+                                <a href="/transaction_details/{{ txn.transaction_id }}" class="btn-view">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-section">
+                {% if current_page > 1 %}
+                    <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}{% if date_range %}&date_range={{ date_range }}{% endif %}" class="btn-page">⏮️ First</a>
+                    <a href="?page={{ current_page - 1 }}{% if search_query %}&search={{ search_query }}{% endif %}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}{% if date_range %}&date_range={{ date_range }}{% endif %}" class="btn-page">← Previous</a>
+                {% endif %}
+                
+                <div class="page-info">Page {{ current_page }} / {{ total_pages }}</div>
+                
+                {% if current_page < total_pages %}
+                    <a href="?page={{ current_page + 1 }}{% if search_query %}&search={{ search_query }}{% endif %}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}{% if date_range %}&date_range={{ date_range }}{% endif %}" class="btn-page">Next →</a>
+                    <a href="?page={{ total_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}{% if date_range %}&date_range={{ date_range }}{% endif %}" class="btn-page">Last ⏭️</a>
+                {% endif %}
+            </div>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <small class="text-muted">Showing {{ transactions|length }} of {{ total_transactions }} transaction(s)</small>
+            </div>
+
+            {% else %}
+            <div class="no-records">
+                <div style="font-size: 4rem; opacity: 0.5;">📭</div>
+                <h4>No Transactions Found</h4>
+                <p class="text-muted">No payment transactions match your filters</p>
+            </div>
+            {% endif %}
+
+            <div class="text-center">
+                <a href="/" class="btn-back">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-format pagination links
+        document.querySelectorAll('a.btn-page').forEach(link => {
+            if (link.textContent.includes('First') || link.textContent.includes('Previous') || 
+                link.textContent.includes('Next') || link.textContent.includes('Last')) {
+                // Links are already formatted
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

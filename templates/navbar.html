@@ -1,28 +1,65 @@
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-lg sticky-top" style="background: linear-gradient(135deg, #1a4d2e 0%, #0d3d22 100%);">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">📚 PathShala</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand fw-bold fs-5" href="/" style="font-size: 1.5rem;">
+            <span style="color: #FFD700;">📚</span> PathShala
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto gap-2">
                 <li class="nav-item">
-                    <a class="nav-link" href="/borrowers">Add User</a>
+                    <a class="nav-link nav-item-custom px-3 py-2 rounded-pill" href="/" title="Home">
+                        🏠 Home
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/borrow_book">Borrow a Book</a>
+                    <a class="nav-link nav-item-custom px-3 py-2 rounded-pill" href="/borrowers" title="Add New User">
+                        👤 Add User
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/borrowed_books">Borrowed Books</a>
+                    <a class="nav-link nav-item-custom px-3 py-2 rounded-pill" href="/borrow_book" title="Borrow a Book">
+                        📖 Borrow Book
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/available_books">Available Books</a>
+                    <a class="nav-link nav-item-custom px-3 py-2 rounded-pill" href="/borrowed_books" title="View Borrowed Books">
+                        ✋ Borrowed Books
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-item-custom px-3 py-2 rounded-pill" href="/available_books" title="View Available Books">
+                        ✅ Available Books
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-item-custom px-3 py-2 rounded-pill" href="/transaction_history" title="View Transaction History">
+                        📊 Transactions
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-item-custom px-3 py-2 rounded-pill" href="/view_all_borrowers" title="View All Borrowers">
+                        👥 Members
+                    </a>
                 </li>
             </ul>
-            <form class="d-flex ms-auto" role="search" action="/search" method="get">
-                <input class="form-control me-2 border-0 shadow-sm" type="search" name="q" placeholder="Search..." aria-label="Search">
-                <button class="btn btn-success shadow-sm" type="submit">Search</button>
-            </form>
         </div>
     </div>
 </nav>
+
+<style>
+.nav-item-custom {
+    color: white !important;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+.nav-item-custom:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.navbar {
+    backdrop-filter: blur(10px);
+}
+</style>

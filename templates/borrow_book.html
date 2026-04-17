@@ -3,73 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borrow a Book</title>
+    <title>Borrow a Book - PathShala</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        html {
+            overflow-y: scroll;
+        }
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #e8f5f0 0%, #c3dfd6 100%);
+            min-height: 100vh;
+            padding: 30px 0;
         }
-        .modern-container {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Updated background color */
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideInDown 0.6s ease-out;
+        }
+        .page-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+        .form-container {
+            background: white;
             border-radius: 15px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out;
         }
-        .modern-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+        .form-group {
+            margin-bottom: 25px;
         }
-        .modern-container h1 {
-            font-family: 'Roboto', sans-serif;
-            font-weight: bold;
-            color: #343a40;
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
         }
-        .modern-container .btn-primary {
-            background-color: #007bff;
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #1a4d2e;
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.1);
+        }
+        .btn-borrow {
+            background: linear-gradient(135deg, #1a4d2e 0%, #0d3d22 100%);
             border: none;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            color: white;
+            padding: 14px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            cursor: pointer;
         }
-        .modern-container .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
+        .btn-borrow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(26, 77, 46, 0.4);
+            color: white;
         }
-        .modern-container .btn-secondary {
-            transition: transform 0.3s ease;
+        .btn-back {
+            background: #f0f0f0;
+            border: none;
+            color: #333;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
         }
-        .modern-container .btn-secondary:hover {
-            transform: scale(1.05);
+        .btn-back:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .form-hint {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 5px;
+        }
+        .required-star {
+            color: #e74c3c;
+        }
+        .constraint-info {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            color: #856404;
+        }
+        .constraint-info strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
     {% include 'navbar.html' %}
-    <div class="container mt-5 d-flex justify-content-center">
-        <div class="modern-container w-50 p-4">
-            <h1 class="text-center mb-4">Borrow a Book</h1>
+
+    <div class="container py-5">
+        <div class="page-title">
+            <h1>📖 Borrow a Book</h1>
+        </div>
+
+        <div class="form-container">
+            <div class="constraint-info">
+                <strong>📚 Borrowing Limit</strong>
+                Each borrower can issue a maximum of <strong>2 books</strong> at a time. Return a book to borrow another one.
+            </div>
             <form method="POST" action="/borrow_book">
-                <div class="mb-3">
-                    <label for="serial_number" class="form-label">Serial Number:</label>
-                    <input type="text" id="serial_number" name="serial_number" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="borrower_id" class="form-label">Borrower:</label>
-                    <select id="borrower_id" name="borrower_id" class="form-control" required>
-                        <option value="">Select Borrower</option>
-                        {% for borrower in borrowers %}
-                            <option value="{{ borrower[0] }}">{{ borrower[1] }}</option>
+                <div class="form-group">
+                    <label for="serial_number">
+                        Select a Book <span class="required-star">*</span>
+                    </label>
+                    <select id="serial_number" name="serial_number" class="form-select" required>
+                        <option value="">-- Choose a Book --</option>
+                        {% for book in available_books %}
+                            <option value="{{ book.serial_number }}">{{ book.serial_number }} - {{ book.title }} ({{ book.category if book.category else 'Uncategorized' }})</option>
                         {% endfor %}
                     </select>
+                    {% if not available_books %}
+                    <div class="alert alert-warning mt-2">No books available for borrowing</div>
+                    {% endif %}
                 </div>
-                <div class="mb-3">
-                    <label for="issue_date" class="form-label">Issue Date:</label>
+
+                <div class="form-group">
+                    <label for="borrower_id">
+                        Borrower <span class="required-star">*</span>
+                    </label>
+                    <select id="borrower_id" name="borrower_id" class="form-select" required onchange="updateBorrowerInfo()">
+                        <option value="">-- Select Borrower --</option>
+                        {% for borrower in borrowers %}
+                            <option value="{{ borrower._id }}" data-active="{{ borrower.active_books }}" data-can-borrow="{{ borrower.can_borrow|lower }}">
+                                {{ borrower.name }} ({{ borrower.email }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if not borrowers %}
+                    <div class="alert alert-warning mt-2">No borrowers registered. <a href="/borrowers">Add a borrower first</a></div>
+                    {% endif %}
+                    <div id="borrower-info" style="margin-top: 12px; display: none;">
+                        <small id="borrower-active-count" style="font-size: 0.9rem; color: #1a4d2e; font-weight: 600;"></small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="issue_date">
+                        Issue Date <span class="required-star">*</span>
+                    </label>
                     <input type="date" id="issue_date" name="issue_date" class="form-control" required>
+                    <div class="form-hint">📅 Select the date when the book is being borrowed</div>
                 </div>
-                <button type="submit" class="btn btn-primary">Borrow Book</button>
+
+                <button type="submit" class="btn-borrow">✓ Confirm Borrow</button>
+                <div class="text-center">
+                    <a href="/" class="btn-back">← Back to Home</a>
+                </div>
             </form>
-            <div class="text-center mt-4">
-                <a href="/" class="btn btn-secondary">Back to Home</a>
-            </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set today's date as default
+        document.getElementById('issue_date').valueAsDate = new Date();
+        
+        // Update borrower info when selection changes
+        function updateBorrowerInfo() {
+            const select = document.getElementById('borrower_id');
+            const selectedOption = select.options[select.selectedIndex];
+            const borrowerInfo = document.getElementById('borrower-info');
+            const activeCountDisplay = document.getElementById('borrower-active-count');
+            
+            if (selectedOption.value === '') {
+                borrowerInfo.style.display = 'none';
+            } else {
+                const activeCount = selectedOption.getAttribute('data-active');
+                const canBorrow = selectedOption.getAttribute('data-can-borrow') === 'true';
+                
+                if (activeCount === '0') {
+                    activeCountDisplay.innerHTML = '✓ No books currently borrowed (can borrow 2 books)';
+                    activeCountDisplay.style.color = '#2ecc71';
+                } else if (activeCount === '1') {
+                    activeCountDisplay.innerHTML = '⚠️ 1 book currently borrowed (can borrow 1 more)';
+                    activeCountDisplay.style.color = '#f39c12';
+                } else {
+                    activeCountDisplay.innerHTML = '🚫 2 books currently borrowed (at limit - must return a book first)';
+                    activeCountDisplay.style.color = '#e74c3c';
+                }
+                
+                borrowerInfo.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>

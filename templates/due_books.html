@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books in Circulation - PathShala</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            overflow-y: scroll;
+        }
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #e8f5f0 0%, #c3dfd6 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideInDown 0.6s ease-out;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+        .card-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1a4d2e;
+            padding-bottom: 10px;
+        }
+        table thead {
+            background: linear-gradient(135deg, #1a4d2e 0%, #0d3d22 100%);
+            color: white;
+        }}
+        table thead th {
+            border: none;
+            font-weight: 600;
+            padding: 15px;
+        }
+        table tbody td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+        }
+        table tbody tr {
+            transition: all 0.3s ease;
+        }
+        table tbody tr:hover {
+            background-color: #e8f5f0;
+            transform: scale(1.01);
+        }
+        .btn-back {
+            background: #f0f0f0;
+            border: none;
+            color: #333;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .btn-back:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .no-books {
+            text-align: center;
+            padding: 40px;
+        }
+        .book-count {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a4d2e;
+            margin: 10px 0;
+        }
+        .table-responsive {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container py-5">
+        <div class="page-header">
+            <h1>⏰ Overdue Books</h1>
+        </div>
+
+        <div class="card-section">
+            <h2 class="section-title">📖 Overdue Books with Fines</h2>
+            
+            {% if due_books %}
+                <div class="text-center mb-4">
+                    <div class="book-count">{{ due_books|length }}</div>
+                    <p class="text-muted">Books overdue with pending fines</p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>📙 Title</th>
+                                <th>📚 Category</th>
+                                <th>✍️ Author</th>
+                                <th>👤 Borrower</th>
+                                <th>⏰ Due Date</th>
+                                <th>📅 Days Overdue</th>
+                                <th>💰 Fine (₹2/day)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for book in due_books %}
+                                <tr>
+                                    <td><strong>{{ book.title }}</strong></td>
+                                    <td><span style="background: #e3f2fd; padding: 5px 10px; border-radius: 5px; font-size: 0.9rem;">{{ book.category if book.category else "N/A" }}</span></td>
+                                    <td>{{ book.author }}</td>
+                                    <td>{{ book.borrower.name }}</td>
+                                    <td>{{ book.due_date.strftime('%d-%m-%Y') if book.due_date else "N/A" }}</td>
+                                    <td><span style="background: #ffe0e0; padding: 5px 10px; border-radius: 5px; font-weight: 600;">{{ book.days_overdue }} days</span></td>
+                                    <td><span style="color: #e74c3c; font-weight: 600; font-size: 1.1rem;">₹{{ book.fine }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination Controls -->
+                <div style="margin-top: 25px; display: flex; justify-content: center; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <!-- First Button -->
+                    {% if current_page == 1 %}
+                        <button class="btn" style="background: #ccc; color: white; padding: 10px 15px; border-radius: 6px; border: none; cursor: not-allowed; opacity: 0.6;" disabled>⏮️ First</button>
+                    {% else %}
+                        <a href="/due_books?page=1" class="btn" style="background: #1a4d2e; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none;">⏮️ First</a>
+                    {% endif %}
+                    
+                    <!-- Previous Button -->
+                    {% if current_page == 1 %}
+                        <button class="btn" style="background: #ccc; color: white; padding: 10px 15px; border-radius: 6px; border: none; cursor: not-allowed; opacity: 0.6;" disabled>← Previous</button>
+                    {% else %}
+                        <a href="/due_books?page={{ current_page - 1 }}" class="btn" style="background: #1a4d2e; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none;">← Previous</a>
+                    {% endif %}
+                    
+                    <!-- Page Indicator -->
+                    <div style="min-width: 150px; text-align: center; font-weight: 600; color: #1a4d2e;">
+                        Page {{ current_page }} / {{ total_pages }}
+                    </div>
+                    
+                    <!-- Next Button -->
+                    {% if current_page == total_pages %}
+                        <button class="btn" style="background: #ccc; color: white; padding: 10px 15px; border-radius: 6px; border: none; cursor: not-allowed; opacity: 0.6;" disabled>Next →</button>
+                    {% else %}
+                        <a href="/due_books?page={{ current_page + 1 }}" class="btn" style="background: #1a4d2e; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none;">Next →</a>
+                    {% endif %}
+                    
+                    <!-- Last Button -->
+                    {% if current_page == total_pages %}
+                        <button class="btn" style="background: #ccc; color: white; padding: 10px 15px; border-radius: 6px; border: none; cursor: not-allowed; opacity: 0.6;" disabled>Last ⏭️</button>
+                    {% else %}
+                        <a href="/due_books?page={{ total_pages }}" class="btn" style="background: #1a4d2e; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none;">Last ⏭️</a>
+                    {% endif %}
+                </div>
+                
+                <div style="margin-top: 15px; text-align: center;">
+                    <small class="text-muted">Showing {{ due_books|length }} of {{ total_items }} book(s)</small>
+                </div>
+            {% else %}
+                <div class="no-books">
+                    <div style="font-size: 4rem; opacity: 0.5;">✅</div>
+                    <h4>No Overdue Books</h4>
+                    <p class="text-muted">All books are on time. Excellent library management!</p>
+                </div>
+            {% endif %}
+
+            <div class="text-center">
+                <a href="/" class="btn-back">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

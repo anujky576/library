@@ -1,9 +1,8 @@
-# from dotenv import load_dotenv
-# import os
+from dotenv import load_dotenv
+import os
 
-# load_dotenv()  # Loads variables from .env
+load_dotenv()  # Loads variables from .env
 
-# MYSQL_HOST = os.getenv('MYSQL_HOST')
-# MYSQL_USER = os.getenv('MYSQL_USER')
-# MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
-# MYSQL_DB = os.getenv('MYSQL_DB')
+# MongoDB Configuration
+MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
+MONGODB_DB = os.getenv('MONGODB_DB', 'library_management')

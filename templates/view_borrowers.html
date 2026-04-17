@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Borrowers - PathShala</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            overflow-y: scroll;
+        }
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #e8f5f0 0%, #c3dfd6 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideInDown 0.6s ease-out;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+        .card-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1a4d2e;
+            padding-bottom: 10px;
+        }
+        table thead {
+            background: linear-gradient(135deg, #1a4d2e 0%, #0d3d22 100%);
+            color: white;
+        }
+        table thead th {
+            border: none;
+            font-weight: 600;
+            padding: 15px;
+        }
+        table tbody td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+        }
+        table tbody tr {
+            transition: all 0.3s ease;
+        }
+        table tbody tr:hover {
+            background-color: #e8f5f0;
+            transform: scale(1.01);
+        }
+        .status-yes {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        .status-no {
+            color: #2ecc71;
+            font-weight: 600;
+        }
+        .btn-remove {
+            background: #ff6b6b;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-remove:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+        .no-borrowers {
+            text-align: center;
+            padding: 40px;
+        }
+        .btn-back {
+            background: #f0f0f0;
+            border: none;
+            color: #333;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .btn-back:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #1a4d2e 0%, #0d3d22 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(26, 77, 46, 0.3);
+        }
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        .stat-card .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+        .search-box input {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .search-box input:focus {
+            border-color: #1a4d2e;
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.1);
+            outline: none;
+        }
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container py-5">
+        <div class="page-header">
+            <h1>👥 All Registered Users</h1>
+        </div>
+
+        <div class="card-section">
+            <!-- Statistics -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="label">Total Members</div>
+                    <div class="number">{{ borrowers|length }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Active Borrowers</div>
+                    <div class="number" id="active-count">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Members with Pending Fines</div>
+                    <div class="number" id="pending-fines">0</div>
+                </div>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search by name, email, or student ID..." onkeyup="filterTable()">
+            </div>
+
+            <!-- Borrowers Table -->
+            {% if borrowers %}
+                <div class="table-responsive">
+                    <table class="table table-hover" id="borrowersTable">
+                        <thead>
+                            <tr>
+                                <th>🆔 Member ID</th>
+                                <th>👤 Name</th>
+                                <th>🎓 Student ID</th>
+                                <th>📧 Email</th>
+                                <th>📞 Phone</th>
+                                <th>📖 Borrowed Books</th>
+                                <th>⚙️ Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for borrower in borrowers %}
+                                <tr class="borrower-row">
+                                    <td><code style="background: #e3f2fd; padding: 5px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">{{ borrower.member_id if borrower.member_id else "N/A" }}</code></td>
+                                    <td><strong>{{ borrower.name }}</strong></td>
+                                    <td><strong style="color: #1a4d2e;">{{ borrower.student_id if borrower.student_id else "N/A" }}</strong></td>
+                                    <td>{{ borrower.email }}</td>
+                                    <td>{{ borrower.phone if borrower.phone else "N/A" }}</td>
+                                    <td>
+                                        {% if borrower.borrowed_count > 0 %}
+                                            <span class="status-yes">✓ {{ borrower.borrowed_count }}</span>
+                                        {% else %}
+                                            <span class="status-no">✗ No</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form method="POST" action="/remove_borrower/{{ borrower._id }}" style="display:inline;">
+                                            <button type="submit" class="btn-remove" onclick="return confirm('Remove this borrower? All borrowed books will be returned.')">🗑️ Remove</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3 text-center">
+                    <small class="text-muted">Showing <span id="visibleCount">{{ borrowers|length }}</span> of {{ borrowers|length }} borrower(s)</small>
+                </div>
+            {% else %}
+                <div class="no-borrowers">
+                    <div style="font-size: 4rem; opacity: 0.5;">👥</div>
+                    <h4>No Borrowers Registered</h4>
+                    <p class="text-muted">Go to <a href="/borrowers" style="color: #1a4d2e; text-decoration: none; font-weight: 600;">Add User</a> to register a new borrower</p>
+                </div>
+            {% endif %}
+
+            <div class="text-center">
+                <a href="/borrowers" class="btn-back">← Back to Add User</a>
+                <a href="/" class="btn-back" style="background: linear-gradient(135deg, #1a4d2e 0%, #0d3d22 100%); color: white;">🏠 Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function filterTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('.borrower-row');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchInput)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document.getElementById('visibleCount').textContent = visibleCount;
+        }
+
+        // Calculate active borrowers
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.borrower-row');
+            let activeCount = 0;
+            
+            rows.forEach(row => {
+                const borrowedCell = row.querySelector('td:nth-child(6)');
+                if (borrowedCell && borrowedCell.textContent.includes('✓')) {
+                    activeCount++;
+                }
+            });
+            
+            document.getElementById('active-count').textContent = activeCount;
+        });
+    </script>
+</body>
+</html>
